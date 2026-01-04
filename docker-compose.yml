@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8081:8080"
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_NAME=hrcore
+      - DB_HOST=db
+      - DB_PORT=3306
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3308:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=hrcore
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  db_data:
