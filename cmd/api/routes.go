@@ -60,7 +60,6 @@ func (app *Application) routes() http.Handler {
 	mux.Post("/thanks/{id}/like", app.LikeThank)
 	mux.Post("/thanks/{id}/unlike", app.UnlikeThank)
 	mux.Post("/thanks/{id}/comment", app.AddCommentToThank)
-	mux.Put("/thanks/comment/{id}", app.UpdateComment)
 	mux.Delete("/thanks/comment/{id}", app.DeleteComment)
 
     mux.Post("/time-off", app.CreateTimeOffRequest)
@@ -76,6 +75,22 @@ func (app *Application) routes() http.Handler {
 
 	mux.Get("/settings/{key}", app.GetSetting)
 	mux.Put("/settings", app.UpdateSetting)
+
+    mux.Post("/time-entry", app.CreateTimeEntry)
+    mux.Get("/time-entry", app.GetTimeEntries)
+    mux.Put("/time-entry/{id}/status", app.ApproveTimeEntry)
+    mux.Delete("/time-entry/{id}", app.DeleteTimeEntry)
+
+    mux.Get("/thanks-categories", app.GetAllThanksCategories)
+    mux.Post("/thanks-categories", app.CreateThanksCategory)
+    mux.Delete("/thanks-categories/{id}", app.DeleteThanksCategory)
+
+    mux.Get("/associates/{id}/pto-balance", app.GetPTOBalance)
+
+    mux.Get("/holidays", app.GetHolidays)
+    mux.Post("/holidays", app.CreateHoliday)
+    mux.Put("/holidays/{id}", app.UpdateHoliday)
+    mux.Delete("/holidays/{id}", app.DeleteHoliday)
 
 	return mux
 }

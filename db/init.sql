@@ -174,7 +174,6 @@ INSERT INTO Associates (id, first_name, last_name, title, department, office, st
 INSERT INTO menu_permissions (menu_item, permission_type, permission_value) VALUES
 -- Everyone can see these
 ('dashboard', 'everyone', NULL),
-('tasks', 'everyone', NULL),
 ('time off', 'everyone', NULL),
 ('thanks', 'everyone', NULL),
 ('hierarchy', 'everyone', NULL),
@@ -187,6 +186,10 @@ INSERT INTO menu_permissions (menu_item, permission_type, permission_value) VALU
 ('admin', 'title', 'CEO'),
 ('admin', 'department', 'People'),
 
+-- Task - CEO and People department
+('tasks', 'title', 'CEO'),
+('tasks', 'department', 'People'),
+
 -- My Team - Managers and CEO
 ('my team', 'title', 'CEO'),
 ('my team', 'title', 'Manager'),
@@ -196,4 +199,26 @@ INSERT INTO menu_permissions (menu_item, permission_type, permission_value) VALU
 ('my team', 'title', 'Head of People'),
 ('my team', 'title', 'Head of Product'),
 ('my team', 'title', 'Head of Legal'),
-('my team', 'title', 'Head of Finance');
+('my team', 'title', 'Head of Finance'),
+
+-- Time Entry Approvals - Managers and CEO
+('time entry approvals', 'title', 'CEO'),
+('time entry approvals', 'title', 'Manager'),
+('time entry approvals', 'title', 'Head of Design'),
+('time entry approvals', 'title', 'Head of Sales'),
+('time entry approvals', 'title', 'Head of Tech'),
+('time entry approvals', 'title', 'Head of People'),
+('time entry approvals', 'title', 'Head of Product'),
+('time entry approvals', 'title', 'Head of Legal'),
+('time entry approvals', 'title', 'Head of Finance'),
+
+-- Time Off Approvals - Managers and CEO
+('time off approvals', 'title', 'CEO'),
+('time off approvals', 'title', 'Manager'),
+('time off approvals', 'title', 'Head of Design'),
+('time off approvals', 'title', 'Head of Sales'),
+('time off approvals', 'title', 'Head of Tech'),
+('time off approvals', 'title', 'Head of People'),
+('time off approvals', 'title', 'Head of Product'),
+('time off approvals', 'title', 'Head of Legal'),
+('time off approvals', 'title', 'Head of Finance');

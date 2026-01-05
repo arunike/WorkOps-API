@@ -30,15 +30,18 @@ type Associate struct {
 }
 
 type Models struct {
-	Associates  AssociateModel
-	Offices     OfficeModel
-	Departments DepartmentModel
-	Tasks       TaskModel
-	Thanks      ThankModel
-    TimeOffRequests TimeOffRequestModel
-    DocumentCategories DocumentCategoryModel
-    MenuPermissions MenuPermissionModel
-    AppSettings AppSettingsModel
+	Associates         AssociateModel
+	Offices            OfficeModel
+	Departments        DepartmentModel
+	Tasks              TaskModel
+	Thanks             ThankModel
+	TimeOffRequests    TimeOffRequestModel
+	DocumentCategories DocumentCategoryModel
+	MenuPermissions    MenuPermissionModel
+	AppSettings        AppSettingsModel
+	TimeEntries        TimeEntryModel
+	ThanksCategories   ThanksCategoryModel
+	Holidays           HolidayModel
 }
 
 type AssociateModel struct {
@@ -55,17 +58,22 @@ type DepartmentModel struct {
 
 func New(db *sql.DB) Models {
 	return Models{
-		Associates:  AssociateModel{DB: db},
-		Offices:     OfficeModel{DB: db},
-		Departments: DepartmentModel{DB: db},
-	Tasks:       TaskModel{DB: db},
-		Thanks:      ThankModel{DB: db},
-        TimeOffRequests: TimeOffRequestModel{DB: db},
-        DocumentCategories: DocumentCategoryModel{DB: db},
-        MenuPermissions: MenuPermissionModel{DB: db},
-        AppSettings: AppSettingsModel{DB: db},
+		Associates:         AssociateModel{DB: db},
+		Offices:            OfficeModel{DB: db},
+		Departments:        DepartmentModel{DB: db},
+		Tasks:              TaskModel{DB: db},
+		Thanks:             ThankModel{DB: db},
+		TimeOffRequests:    TimeOffRequestModel{DB: db},
+		DocumentCategories: DocumentCategoryModel{DB: db},
+		MenuPermissions:    MenuPermissionModel{DB: db},
+		AppSettings:        AppSettingsModel{DB: db},
+		TimeEntries:        TimeEntryModel{DB: db},
+		ThanksCategories:   ThanksCategoryModel{DB: db},
+		Holidays:           HolidayModel{DB: db},
 	}
 }
+
+
 
 
 func (m AssociateModel) Insert(associate Associate) (int, error) {

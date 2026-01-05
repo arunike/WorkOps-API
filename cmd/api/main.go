@@ -120,6 +120,30 @@ func migrateDB(db *sql.DB) {
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             FOREIGN KEY (associate_id) REFERENCES Associates(id)
         );`,
+        `CREATE TABLE IF NOT EXISTS time_entries (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            associate_id INT NOT NULL,
+            date DATETIME NOT NULL,
+            hours DECIMAL(5, 2) NOT NULL,
+            overtime_hours DECIMAL(5, 2) NOT NULL DEFAULT 0,
+            comments TEXT,
+            status VARCHAR(50) DEFAULT 'Approved',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (associate_id) REFERENCES Associates(id)
+        );`,
+        // Attempt to add status column if it doesn't exist (for existing tables)
+        `ALTER TABLE time_entries ADD COLUMN status VARCHAR(50) DEFAULT 'Approved';`,
+        `CREATE TABLE IF NOT EXISTS menu_permissions (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            menu_item VARCHAR(255) NOT NULL,
+            permission_type VARCHAR(50) NOT NULL,
+            permission_value VARCHAR(255),
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );`,
+        `CREATE TABLE IF NOT EXISTS thanks_categories (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL UNIQUE
+        );`,
     }
 
     for _, query := range queries {
@@ -138,5 +162,17 @@ func migrateDB(db *sql.DB) {
     err = db.QueryRow("SELECT COUNT(*) FROM Departments").Scan(&count)
     if err == nil && count == 0 {
          db.Exec("INSERT INTO Departments (name) VALUES ('IT'), ('HR'), ('Design'), ('Sales')")
+    }
+
+    // Seed menu permissions for Time Entry if not exists
+    err = db.QueryRow("SELECT COUNT(*) FROM menu_permissions WHERE menu_item = 'Time Entry'").Scan(&count)
+    if err == nil && count == 0 {
+         db.Exec("INSERT INTO menu_permissions (menu_item, permission_type, permission_value) VALUES ('Time Entry', 'everyone', NULL)")
+    }
+
+    // Seed thanks categories if not exists
+    err = db.QueryRow("SELECT COUNT(*) FROM thanks_categories").Scan(&count)
+    if err == nil && count == 0 {
+         db.Exec("INSERT INTO thanks_categories (name) VALUES ('Team Player'), ('Superhero'), ('Thank You!'), ('Knowledge')")
     }
 }

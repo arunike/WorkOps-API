@@ -68,7 +68,6 @@ The WorkOps API handles all business logic, data persistence, and authentication
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd ReactJS-HRCore/api
    ```
 
 2. **Environment Variables**
