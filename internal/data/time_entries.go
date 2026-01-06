@@ -90,6 +90,46 @@ func (m TimeEntryModel) GetByAssociateID(associateID int) ([]TimeEntry, error) {
 	return entries, nil
 }
 
+func (m TimeEntryModel) GetByManagerID(managerID int) ([]TimeEntry, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `SELECT t.id, t.associate_id, t.date, t.hours, t.overtime_hours, t.comments, t.status, t.created_at, a.first_name, a.last_name
+    FROM time_entries t
+    JOIN Associates a ON t.associate_id = a.id
+    WHERE a.manager_id = ?
+    ORDER BY t.date DESC`
+
+	rows, err := m.DB.QueryContext(ctx, query, managerID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var entries []TimeEntry
+	for rows.Next() {
+		var e TimeEntry
+		err := rows.Scan(
+			&e.ID,
+			&e.AssociateID,
+			&e.Date,
+			&e.Hours,
+			&e.OvertimeHours,
+			&e.Comments,
+			&e.Status,
+			&e.CreatedAt,
+			&e.FirstName,
+			&e.LastName,
+		)
+		if err != nil {
+			return nil, err
+		}
+		entries = append(entries, e)
+	}
+
+	return entries, nil
+}
+
 func (m TimeEntryModel) GetAll() ([]TimeEntry, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()

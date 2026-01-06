@@ -1501,6 +1501,7 @@ func (app *Application) CreateTimeEntry(w http.ResponseWriter, r *http.Request) 
 
 func (app *Application) GetTimeEntries(w http.ResponseWriter, r *http.Request) {
     associateIDStr := r.URL.Query().Get("associate_id")
+    managerIDStr := r.URL.Query().Get("manager_id")
     status := r.URL.Query().Get("status")
     
     var entries []data.TimeEntry
@@ -1512,8 +1513,14 @@ func (app *Application) GetTimeEntries(w http.ResponseWriter, r *http.Request) {
         if err == nil {
              entries, err = app.Models.TimeEntries.GetByAssociateID(associateID)
         }
+    } else if managerIDStr != "" {
+        var managerID int
+        _, err = fmt.Sscan(managerIDStr, &managerID)
+        if err == nil {
+             entries, err = app.Models.TimeEntries.GetByManagerID(managerID)
+        }
     } else {
-        // Admin/Manager view or all entries
+        // Admin view or all entries
         entries, err = app.Models.TimeEntries.GetAll()
     }
 
