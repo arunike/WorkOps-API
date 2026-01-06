@@ -30,18 +30,16 @@ func (m AppSettingsModel) Get(key string) (*AppSetting, error) {
 	return &s, nil
 }
 
-func (m AppSettingsModel) Update(key string, value string) error {
+func (m AppSettingsModel) Upsert(key string, value string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	// Upsert query (INSERT ON DUPLICATE KEY UPDATE)
-	// For SQLite/Postgres syntax might vary, assuming MySQL/MariaDB from context (though file said init.sql)
-	// Actually, strict ANSI SQL doesn't have UPSERT. Let's use INSERT OR REPLACE for SQLite or specific MySQL syntax.
-	// Looking at project, it uses `mysql` driver usually or `postgres`.
-	// Let's assume MySQL given the ? placeholders in other files.
-    // If table has primary key, REPLACE works.
 	query := `REPLACE INTO AppSettings (setting_key, setting_value) VALUES (?, ?)`
 	
 	_, err := m.DB.ExecContext(ctx, query, key, value)
 	return err
+}
+
+func (m AppSettingsModel) Update(key string, value string) error {
+    return m.Upsert(key, value)
 }

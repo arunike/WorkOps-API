@@ -73,9 +73,6 @@ func New(db *sql.DB) Models {
 	}
 }
 
-
-
-
 func (m AssociateModel) Insert(associate Associate) (int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -117,6 +114,15 @@ func (m AssociateModel) Insert(associate Associate) (int, error) {
 	}
 
 	return int(id), nil
+}
+
+func (m DepartmentModel) Delete(id int) error {
+    ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+    defer cancel()
+
+    stmt := `DELETE FROM Departments WHERE id = ?`
+    _, err := m.DB.ExecContext(ctx, stmt, id)
+    return err
 }
 
 func (m AssociateModel) GetByEmail(email string) (*Associate, error) {
@@ -390,11 +396,5 @@ func (m DepartmentModel) Insert(dept Department) (int, error) {
     return int(id), nil
 }
 
-func (m DepartmentModel) Delete(id int) error {
-    ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-    defer cancel()
 
-    stmt := `DELETE FROM Departments WHERE id = ?`
-    _, err := m.DB.ExecContext(ctx, stmt, id)
-    return err
-}
+

@@ -1908,3 +1908,41 @@ func (app *Application) UpdateSidebarOrder(w http.ResponseWriter, r *http.Reques
     w.Header().Set("Content-Type", "application/json")
     w.Write(out)
 }
+func (app *Application) GetDashboardOrder(w http.ResponseWriter, r *http.Request) {
+	setting, err := app.Models.AppSettings.Get("dashboard_order")
+	if err != nil {
+		if err == sql.ErrNoRows {
+			w.Header().Set("Content-Type", "application/json")
+            w.Write([]byte(`[]`))
+			return
+		}
+		app.errorJSON(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+    w.Write([]byte(setting.Value))
+}
+
+func (app *Application) UpdateDashboardOrder(w http.ResponseWriter, r *http.Request) {
+	var order []string
+	err := json.NewDecoder(r.Body).Decode(&order)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	jsonBytes, err := json.Marshal(order)
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	err = app.Models.AppSettings.Upsert("dashboard_order", string(jsonBytes))
+	if err != nil {
+		app.errorJSON(w, err)
+		return
+	}
+
+	app.writeJSON(w, http.StatusOK, jsonBytes)
+}

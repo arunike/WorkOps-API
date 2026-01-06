@@ -28,8 +28,8 @@ func (app *Application) routes() http.Handler {
     mux.Delete("/associates/{id}", app.DeleteAssociate)
     mux.Get("/associates/{id}", app.GetAssociate)
 	
-    mux.Get("/admin/sidebar-order", app.GetSidebarOrder)
-    mux.Put("/admin/sidebar-order", app.UpdateSidebarOrder)
+    mux.HandleFunc("/admin/sidebar-order", app.enableCORS(app.requireRole("Admin", app.statusHandler(http.HandlerFunc(app.GetSidebarOrder), app.UpdateSidebarOrder))))
+	mux.HandleFunc("/admin/dashboard-order", app.enableCORS(app.requireRole("Admin", app.statusHandler(http.HandlerFunc(app.GetDashboardOrder), app.UpdateDashboardOrder))))
 
     mux.Get("/associates", app.GetAllAssociates)
     
