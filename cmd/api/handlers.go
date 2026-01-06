@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+    "log"
     "time"
     "errors"
 	"fmt"
@@ -209,6 +210,7 @@ func (app *Application) DeleteAssociate(w http.ResponseWriter, r *http.Request) 
 }
 
 func (app *Application) GetAssociate(w http.ResponseWriter, r *http.Request) {
+    log.Println("Hit GetAssociate handler")
     idStr := chi.URLParam(r, "id")
     var id int
     _, err := fmt.Sscan(idStr, &id)
@@ -230,6 +232,7 @@ func (app *Application) GetAssociate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *Application) GetAllAssociates(w http.ResponseWriter, r *http.Request) {
+    log.Println("Hit GetAllAssociates handler")
 	associates, err := app.Models.Associates.GetAll()
 	if err != nil {
 		app.errorJSON(w, err)
@@ -1856,4 +1859,52 @@ func (app *Application) DeleteHoliday(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(out)
+}
+
+func (app *Application) GetSidebarOrder(w http.ResponseWriter, r *http.Request) {
+	setting, err := app.Models.AppSettings.Get("sidebar_order")
+	if err != nil {
+        if err == sql.ErrNoRows {
+             // Return empty JSON list if no setting exists
+             w.Header().Set("Content-Type", "application/json")
+             w.Write([]byte(`[]`))
+             return
+        }
+		app.errorJSON(w, err)
+		return
+	}
+
+    // Value should already be a JSON string like ["Dashboard", "Associates", ...]
+    w.Header().Set("Content-Type", "application/json")
+    w.Write([]byte(setting.Value))
+}
+
+func (app *Application) UpdateSidebarOrder(w http.ResponseWriter, r *http.Request) {
+    var payload []string
+    err := json.NewDecoder(r.Body).Decode(&payload)
+    if err != nil {
+        app.errorJSON(w, err)
+        return
+    }
+
+    // Marshal back to string to store
+    jsonBytes, err := json.Marshal(payload)
+    if err != nil {
+        app.errorJSON(w, err)
+        return
+    }
+
+    err = app.Models.AppSettings.Update("sidebar_order", string(jsonBytes))
+    if err != nil {
+        app.errorJSON(w, err)
+        return
+    }
+
+    type jsonResponse struct {
+        OK bool `json:"ok"`
+    }
+
+    out, _ := json.Marshal(jsonResponse{OK: true})
+    w.Header().Set("Content-Type", "application/json")
+    w.Write(out)
 }

@@ -15,7 +15,7 @@ func (app *Application) routes() http.Handler {
 	mux.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token", "Cache-Control", "Pragma", "X-User-ID"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 		MaxAge:           300,
@@ -28,6 +28,9 @@ func (app *Application) routes() http.Handler {
     mux.Delete("/associates/{id}", app.DeleteAssociate)
     mux.Get("/associates/{id}", app.GetAssociate)
 	
+    mux.Get("/admin/sidebar-order", app.GetSidebarOrder)
+    mux.Put("/admin/sidebar-order", app.UpdateSidebarOrder)
+
     mux.Get("/associates", app.GetAllAssociates)
     
     mux.Post("/login", app.Login)

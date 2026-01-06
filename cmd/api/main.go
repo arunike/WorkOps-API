@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+    "strings"
 )
 
 type Config struct {
@@ -144,11 +145,19 @@ func migrateDB(db *sql.DB) {
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL UNIQUE
         );`,
+        `CREATE TABLE IF NOT EXISTS AppSettings (
+            setting_key VARCHAR(255) PRIMARY KEY,
+            setting_value TEXT
+        );`,
     }
 
     for _, query := range queries {
         _, err := db.Exec(query)
         if err != nil {
+            if strings.Contains(err.Error(), "Duplicate column name") || strings.Contains(err.Error(), "1060") {
+               log.Printf("Migration warning (safe to ignore): %v", err)
+               continue
+            }
             log.Printf("Error executing migration query: %v\nQuery: %s", err, query)
         }
     }

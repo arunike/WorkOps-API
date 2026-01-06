@@ -114,6 +114,11 @@ CREATE TABLE IF NOT EXISTS DocumentCategories (
     name VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS AppSettings (
+    setting_key VARCHAR(255) PRIMARY KEY,
+    setting_value TEXT
+);
+
 INSERT IGNORE INTO Offices (name) VALUES ('London'), ('New York'), ('Paris');
 INSERT IGNORE INTO Departments (name) VALUES ('Design'), ('Sales'), ('Tech'), ('People'), ('Product'), ('Legal'), ('Finance');
 INSERT IGNORE INTO DocumentCategories (name) VALUES ('Contracts'), ('Identity'), ('Tax'), ('Payroll'), ('Other');
