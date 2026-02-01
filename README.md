@@ -11,7 +11,8 @@ The powerful backend powering the WorkOps system. A clear, performant, and RESTf
 - [Getting Started](#-getting-started)
 - [Project Structure](#-project-structure)
 - [API Endpoints](#-api-endpoints)
-- [Authors](#-authors)
+- [License](#-license)
+- [Author](#-author)
 
 ## 🌟 Overview
 The WorkOps API handles all business logic, data persistence, and authentication for the platform. It provides a secure and scalable foundation for managing associates, departments, tasks, and social interactions.
