@@ -11,6 +11,7 @@ The powerful backend powering the WorkOps system. A clear, performant, and RESTf
 - [Getting Started](#-getting-started)
 - [Project Structure](#-project-structure)
 - [API Endpoints](#-api-endpoints)
+- [Frontend](#-frontend)
 - [License](#-license)
 - [Author](#-author)
 
@@ -127,6 +128,10 @@ api/
 - `POST /thanks/{id}/comment` - Comment on a post
 
 *...and many more for Tasks, Time Off, Offices, etc.*
+
+## 🔗 Frontend
+
+- **Frontend**: [WorkOps Frontend](https://github.com/arunike/WorkOps-Frontend)
 
 ## 📄 License
 
